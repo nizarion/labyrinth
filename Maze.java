@@ -17,13 +17,6 @@ public class Maze {
 		this.HEIGHT = arrHeight;
 		this.myMazeArray = new int[this.HEIGHT][this.WIDTH];
 		this.charMaze = new char[this.HEIGHT][this.WIDTH];
-
-		// for (int i=0; i<myMazeArray.length; i++) {
-		// String[] line = sc.nextLine().trim().split(" ");
-		// for (int j=0; j<line.length; j++) {
-		// myMazeArray[i][j] = Integer.parseInt(line[j]);
-		// }
-		// }
 	}
 
 	public void startAndFinish(int start_x, int start_y, int end_x, int end_y) {
@@ -63,15 +56,11 @@ public class Maze {
 	}
 
 	public void printMazeChar(boolean removeDots) {
-		// start position [marked with 2]
-		// end position [marked with 3]
-		// path/trace [marked with 4]
-
-		// discovered position [marked with 5]
-
-		// current position [marked with 6]
-
-		// TODO replace trace with 4
+		// start position [marked with S]
+		// end position [marked with E]
+		// path/trace [marked with X]
+		// discovered position [marked with .]
+		System.out.println("\n-------------MAZE-------------");
 		if (removeDots) {
 			for (char[] row : charMaze) {
 				System.out.println(
@@ -82,21 +71,8 @@ public class Maze {
 				System.out.println(Arrays.toString(row).replaceAll(", ", "").replaceAll("\\[|\\]", ""));
 			}
 		}
+		System.out.println("------------------------------\n");
 
 	}
 
-	// /**
-	// * TODO Put here a description of what this method does.
-	// *
-	// * @param args
-	// */
-	// public void printMazeOutput(int maze2DArray[][]) {
-	// for (int[] row : maze2DArray) {
-	// for (int x : row) {
-	//
-	// System.out.print(x);
-	// }
-	// System.out.println("");
-	// }
-	// }
 }
