@@ -11,7 +11,7 @@ public class runMe {
 		// TODO Auto-generated method stub
 		System.out.println("Program start");
 //		MazeSolver solver = new MazeSolver("C:\\Users\\Nizar\\JAVAworkspace\\ubrah\\src\\ubrah\\input.txt");
-		MazeSolver solver = new MazeSolver("C:\\Users\\Nizar\\JAVAworkspace\\ubrah\\src\\ubrah\\Samples\\medium_input.txt");
+		MazeSolver solver = new MazeSolver("C:\\Users\\Nizar\\JAVAworkspace\\ubrah\\src\\ubrah\\Samples\\small_wrap_input.txt");
 		solver.solveTheMaze();
 	}
 
