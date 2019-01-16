@@ -1,3 +1,13 @@
+Run instructions
+================
+
+MazeSolver provides the main functionality of the program.
+Please run MazeSolver and provide the file to read
+
+Maze creates a simple maze instance and provides methods to import the Maze and print it
+
+
+
 Solving a maze
 ==============
 

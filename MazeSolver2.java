@@ -11,11 +11,10 @@ import java.util.Queue;
  * 
  * The constructor reads a file and creates an instance of type Maze. The Maze
  * class should be used for this software to run properly.
- * Please refer to README.txt for input/output formats.
- * 
+ *
  * @author Nizar. Created 15 Jan 2019.
  */
-public class MazeSolver {
+public class MazeSolver2 {
 
 	Maze inMaze;
 	Queue<Integer> Cords_x = new LinkedList<>();
@@ -24,37 +23,21 @@ public class MazeSolver {
 	boolean foundEnd;
 	int currNode_x;
 	int currNode_y;
-	
-    /**
-     * Main function runs.
-     * Name and location of the input file are selectable at runtime
-     * Full path to the file is sufficient, examples:
-     * C:\\Users\\Nizar\\JAVAworkspace\\ubrah\\src\\ubrah\\Samples\\input.txt
-     * C:\\Users\\Nizar\\JAVAworkspace\\ubrah\\src\\ubrah\\Samples\\large_input.txt
-     * C:\\Users\\Nizar\\JAVAworkspace\\ubrah\\src\\ubrah\\Samples\\small_wrap_input.txt
-     * @param args
-     */
-    public static void main(String[] args) 
-    {   
-       Scanner input_file = new Scanner(System.in); 
-       System.out.println("Welcome to Mazesolver!");   
-       System.out.println("Enter a filename please ");   
-       // C:\\Users\\Nizar\\JAVAworkspace\\ubrah\\src\\ubrah\\Samples\\large_input.txt
-       String filename = input_file.nextLine();
-       System.out.println("Opening " + filename);
-       MazeSolver solver = new MazeSolver(filename);
-       solver.solveTheMaze();
-    }
 
 	/**
-	 * This constructor parses a file.
-	 * Loads the maze and the information provided from the file.
-	 * It is assumed that the input file will always follow the 
-	 * guidelines provided in the "Maze input/output formats" section
+	 * This constructor parses a file
+	 * 
+	 * Example file: 10 10 1 1 8 8 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 0 1 0 1
+	 * 1 1 1 1 1 1 0 1 0 0 0 0 0 0 1 1 0 1 1 0 1 0 1 1 1 1 0 1 0 0 1 0 1 0 1 1 0 1 0
+	 * 0 0 0 0 0 1 1 0 1 1 1 0 1 1 1 1 1 0 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 eof
+	 * 
+	 * Loads the maze and the information provided.
+	 * 
 	 *
-	 * @param String: FILENAME
+	 * @param String
+	 *            FILENAME
 	 */
-	public MazeSolver(String FILENAME) {
+	public MazeSolver2(String FILENAME) {
 		try (Scanner sc = new Scanner(new FileReader(FILENAME))) {
 
 			String[] sCurrentLine;
@@ -81,44 +64,39 @@ public class MazeSolver {
 			this.inMaze.startAndFinish(START_X, START_Y, END_X, END_Y);
 
 			// Parse the maze itself
+			int[][] myMazeArray = new int[HEIGHT][WIDTH];
 			while (sc.hasNextLine()) {
-				for (int i = 0; i < HEIGHT; i++) {
+				for (int i = 0; i < myMazeArray.length; i++) {
 					String[] line = sc.nextLine().trim().split(" ");
 					for (int j = 0; j < line.length; j++) {
 						int temp = Integer.parseInt(line[j]);
+						myMazeArray[i][j] = temp;
 						inMaze.importMazeChar(i, j, temp);
 					}
 				}
 			}
+			this.inMaze.importMazeInt(myMazeArray);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	/**
-	 * Given a point in the maze (x,y) looks around to find possible next moves.
-	 * Calls checkIfWall to check if possible move, is a wall
-	 * Valid moves are N, S, E, W only, with no diagonal movement allowed. 
-	 * Moves in any of these directions will be blocked by maze walls, which are
-	 * identified as 1's in the input file. The edges of the grid should not be 
-	 * considered as walls unless specified, and allow for wrapping movement.
-	 * 
-	 * Also if end point is found it informs the main code to stop searching and draw the path
-	 * 
-	 * @param x
-	 * @param y
-	 */
-	private void discoverPossibleMoves(int x, int y) {
-		
-		// if on side
+	private void addToQueue(Queue<Integer> queue_x, Queue<Integer> queue_y, int x, int y) {
+		queue_x.add(x);
+		queue_y.add(y);
+		inMaze.charMaze[y][x] = '.';
+	}
+
+	public void discoverPossibleMoves(int x, int y) {
 		int temp_x;
 		int temp_y;
+		// if on side
 		if (x < 1) {
 			temp_x = inMaze.WIDTH - 1;
 			temp_y = y;
 			if (checkIfWall(temp_x, temp_y)) {
-			//	addToParrents(temp_x, temp_y, x, y);
+				addToParrents(temp_x, temp_y, x, y);
 			}
 			checkIfWall(x + 1, y);
 			checkIfWall(x, y + 1);
@@ -127,7 +105,7 @@ public class MazeSolver {
 			temp_x = 0 + 1;
 			temp_y = y;
 			if (checkIfWall(temp_x, temp_y)) {
-			//	addToParrents(temp_x, temp_y, x, y);
+				addToParrents(temp_x, temp_y, x, y);
 			}
 			checkIfWall(x - 1, y);
 			checkIfWall(x, y + 1);
@@ -136,7 +114,7 @@ public class MazeSolver {
 			temp_x = x;
 			temp_y = inMaze.HEIGHT - 1;
 			if (checkIfWall(temp_x, temp_y)) {
-			//	addToParrents(temp_x, temp_y, x, y);
+				addToParrents(temp_x, temp_y, x, y);
 			}
 			checkIfWall(x + 1, y);
 			checkIfWall(x - 1, y);
@@ -145,7 +123,7 @@ public class MazeSolver {
 			temp_x = x;
 			temp_y = inMaze.HEIGHT - 1;
 			if (checkIfWall(temp_x, temp_y)) {
-				//addToParrents(temp_x, temp_y, x, y);
+				addToParrents(temp_x, temp_y, x, y);
 			}
 			checkIfWall(x + 1, y);
 			checkIfWall(x - 1, y);
@@ -183,15 +161,7 @@ public class MazeSolver {
 		}
 	}
 
-	/**
-	 * Checks if the give point is a passage and add it to queue used by BFS, by calling addToQueue() 
-	 * also calls addToParrents()
-	 * 
-	 * @param ch_x
-	 * @param ch_y
-	 * @return true if did found a passage in this position
-	 */
-	private boolean checkIfWall(int ch_x, int ch_y) {
+	public boolean checkIfWall(int ch_x, int ch_y) {
 		if (inMaze.charMaze[ch_y][ch_x] == ' ') {
 			addToQueue(Cords_x, Cords_y, ch_x, ch_y);
 			addToParrents(ch_x, ch_y, currNode_x, currNode_y);
@@ -201,49 +171,13 @@ public class MazeSolver {
 		}
 	}
 
-	/**
-	 * The 2 queues must allways be called together as the provide pairs of (x,y) (points 
-	 * in the maze.
-	 * Also marks the point with a dot which means the point is discovered
-	 * 
-	 * @param queue_x queue for x coordinates
-	 * @param queue_y queue for y coordinates
-	 * @param x x coordinates
-	 * @param y y coordinates
-	 */
-	private void addToQueue(Queue<Integer> queue_x, Queue<Integer> queue_y, int x, int y) {
-		queue_x.add(x);
-		queue_y.add(y);
-		inMaze.charMaze[y][x] = '.';
-	}
-
-	/**
-	 * Add the previous point that lead to the starting point
-	 * Is used to create final path after BFS is finished
-	 * 
-	 * @param next_x child x
-	 * @param next_y child y
-	 * @param toAdd_x parent x
-	 * @param toAdd_y parent y
-	 */
-	private void addToParrents(int next_x, int next_y, int toAdd_x, int toAdd_y) {
+	public void addToParrents(int next_x, int next_y, int toAdd_x, int toAdd_y) {
 		// if (parents[y][x][3] )
 		parents[next_y][next_x][0] = toAdd_y;
 		parents[next_y][next_x][1] = toAdd_x;
 
 	}
 
-	/**
-	 * Main code. Contains the algorithm used to find end of the Maze.
-	 * Uses BFS (Breadth-first search) which  is an algorithm for traversing 
-	 * or searching tree or graph data structures. It starts at the tree root 
-	 * and explores all of the neighbor nodes.
-	 * Keeps track of each discovered point and the way we should go to find the 
-	 * starting point.
-	 * After end is discovered if traces back from end to start and prints the 
-	 * output.
-	 * 
-	 */
 	public void solveTheMaze() {
 		parents = new int[inMaze.HEIGHT][inMaze.WIDTH][3];
 		for (int i = 0; i < inMaze.HEIGHT; i++) {
